@@ -6,3 +6,4 @@ numpy
 requests
 joblib
 python-multipart
+scikit-learn==1.4.2
