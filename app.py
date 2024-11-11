@@ -1,23 +1,26 @@
 import requests
-
-# Google Drive URL for your species.pkl file
-GDRIVE_URL = "https://drive.google.com/file/d/1B9Zpi4m59LI2BQC2SRb2yR1UyiI72NRx/"
-PICKLE_FILE_PATH = "species.pkl"
-
-# Download the pickle file
-def download_pickle_file():
-    response = requests.get(GDRIVE_URL)
-    with open(PICKLE_FILE_PATH, "wb") as f:
-        f.write(response.content)
-
-# Call this function at the start of the API
-download_pickle_file()
-
-
 import numpy as np
 from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 import joblib
+
+# Google Drive file ID for your species.pkl file
+GDRIVE_FILE_ID = "1B9Zpi4m59LI2BQC2SRb2yR1UyiI72NRx"
+GDRIVE_URL = f"https://drive.google.com/uc?export=download&id={GDRIVE_FILE_ID}"
+PICKLE_FILE_PATH = "species_model.pkl"
+
+# Function to download the pickle file
+def download_pickle_file():
+    response = requests.get(GDRIVE_URL)
+    if response.status_code == 200:
+        with open(PICKLE_FILE_PATH, "wb") as f:
+            f.write(response.content)
+        print("Pickle file downloaded successfully.")
+    else:
+        print("Failed to download the pickle file.")
+
+# Call this function to download the pickle file before the API starts
+download_pickle_file()
 
 # Load the pre-trained model and encoder
 species_model = joblib.load('species_model.pkl')  # Your SVC model
